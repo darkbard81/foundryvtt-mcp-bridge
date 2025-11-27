@@ -40,7 +40,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             input.id = config.namespace && config.key;
             input.name = config.name;
             input.value = game.settings.get(moduleId, config.key);
-            input.readOnly = true;
+            input.readOnly = config.key === SETTINGS.API_KEY ? false : true;
             input.type = config.key === SETTINGS.API_KEY ? "password" : "text";
             input.autocomplete = "off";
             fields.append(input);
@@ -86,6 +86,15 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
     override async _onSubmit(target: HTMLButtonElement, event: PointerEvent | SubmitEvent) {
         event.preventDefault(); // Prevent default browser dialog dismiss behavior.
         event.stopPropagation();
+        const form = event.currentTarget as HTMLFormElement;
+        const formData = new FormData(form);
+        const prevApiKey = game.settings.get(moduleId, SETTINGS.API_KEY);
+        const nextApiKey = String(formData.get(SETTINGS.API_KEY) ?? "");
+        const apiKeyChanged = nextApiKey !== prevApiKey;
+
+        if (apiKeyChanged) {
+            await game.settings.set(moduleId, SETTINGS.API_KEY, nextApiKey);
+        }
         return this.close({ submitted: true });
     }
 

@@ -4,39 +4,39 @@ export const moduleId = id;
 
 export const MODULE_NAMESPACE: string = id;
 
-// const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (field: foundry.data.fields.DataField, config: foundry.data.types.FormInputConfig) => {
-//     const group = document.createElement("div");
-//     group.className = "form-group";
+const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (field: foundry.data.fields.DataField, config: foundry.data.types.FormInputConfig) => {
+    const group = document.createElement("div");
+    group.className = "form-group";
 
-//     const id = config.id ?? config.name; // for/id 매칭
-//     const label = document.createElement("label");
-//     label.htmlFor = id;
-//     label.textContent = "API Key";
+    const id = config.id ?? config.name; // for/id 매칭
+    const label = document.createElement("label");
+    label.htmlFor = id;
+    label.textContent = "API Key";
 
-//     const fields = document.createElement("div");
-//     fields.className = "form-fields";
-//     const input = document.createElement("input");
-//     input.type = "password";
-//     input.id = id;
-//     input.name = config.name;
-//     input.value = config.value as string ?? "";
-//     input.autocomplete = "one-time-code";
-//     fields.append(input);
+    const fields = document.createElement("div");
+    fields.className = "form-fields";
+    const input = document.createElement("input");
+    input.type = "password";
+    input.id = id;
+    input.name = config.name;
+    input.value = config.value as string ?? "";
+    input.autocomplete = "one-time-code";
+    fields.append(input);
 
-//     group.append(label, fields);
-//     return group; // HTMLElement 반환
-// };
+    group.append(label, fields);
+    return group; // HTMLElement 반환
+};
 
 export const SETTINGS = {
     //Websoket Setting
     WS_RELAY_URL: 'wsRelayUrl',
-    API_KEY: "apiKey",
     CUSTOM_NAME: "customName",
     LOG_LEVEL: "logLevel",
     PING_INTERVAL: "pingInterval",
     RECONNECT_MAX_ATTEMPTS: "reconnectMaxAttempts",
     RECONNECT_BASE_DELAY: "reconnectBaseDelay",
     //Client Info
+    API_KEY: "apiKey",
     CLIENT_ID: 'clientId',
     WORLD_ID: 'worldId',
     WORLD_TITLE: 'worldTitle',
@@ -58,25 +58,6 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         default: "ws://localhost:8080"
     },
 
-    [SETTINGS.API_KEY]: {
-        key: SETTINGS.API_KEY,
-        namespace: MODULE_NAMESPACE,
-        name: "API Key",
-        hint: "API Key for authentication with the relay server",
-        scope: "world",
-        config: true,
-        type: new foundry.data.fields.StringField(),
-        default: CONST.PASSWORD_SAFE_STRING,
-        input: (field, config) => {
-            const input = document.createElement("input");
-            input.type = "password";
-            input.name = config.name;
-            input.value = config.value as string ?? "";
-            input.autocomplete = "one-time-code";
-            return input;
-        }
-    },
-
     [SETTINGS.CUSTOM_NAME]: {
         key: SETTINGS.CUSTOM_NAME,
         namespace: MODULE_NAMESPACE,
@@ -95,7 +76,7 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         hint: "Set the level of detail for module logging",
         scope: "world",
         config: true,
-        type: new foundry.data.fields.NumberField(),
+        type: String,
         choices: {
             0: "debug",
             1: "info",
@@ -112,7 +93,7 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         hint: "How often (in seconds) the module sends a ping to the relay server to keep the connection alive.",
         scope: "world",
         config: true,
-        type: new foundry.data.fields.NumberField(),
+        type: Number,
         default: 30,
         range: {
             min: 5,
@@ -145,6 +126,19 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
 };
 
 export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
+
+    [SETTINGS.API_KEY]: {
+        key: SETTINGS.API_KEY,
+        namespace: MODULE_NAMESPACE,
+        name: "API Key",
+        hint: "API Key for authentication with the relay server",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.StringField(),
+        default: CONST.PASSWORD_SAFE_STRING,
+        input: FormInput_API_KEY
+    },
+
     [SETTINGS.CLIENT_ID]: {
         key: SETTINGS.CLIENT_ID,
         namespace: MODULE_NAMESPACE,

@@ -48,15 +48,16 @@ foundry.helpers.Hooks.once("ready", () => {
     setTimeout(() => {
         initializeWebSocket();
     }, 1000);
-    
+
     const module = game.modules.get(moduleId) as FoundryRestApi;
+    const webSocketManager = module.api.getWebSocketManager();
 
     for (const config of Object.values(SETTINGS_SYSTEM)) {
         // config: foundry.types.SettingConfig
         if (config.default === "") {
             switch (config.key) {
                 case SETTINGS.CLIENT_ID:
-                    config.default = module.socketManager?.getClientId();
+                    config.default = webSocketManager?.getClientId();
                     break;
                 case SETTINGS.WORLD_ID:
                     config.default = game.world?._source?.id;
