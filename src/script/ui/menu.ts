@@ -28,6 +28,7 @@ export const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (f
 export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
 
     /**
+     * @override
      * Applications are constructed by providing an object of configuration options.
      * @param {Partial<Configuration>} [options]    Options used to configure the Application instance
      */
@@ -39,7 +40,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
                 action: "ok",
                 label: "OK",
                 default: true,
-                callback: () => this.close({ submitted: true })
+                callback: (event: any, button: any, dialog: any) => dialog.close({ submitted: true })
             }]
         }, options));
     }
@@ -79,10 +80,8 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
         const form = document.createElement("form");
         form.className = "dialog-form standard-form";
         form.autocomplete = "off";
-        form.innerHTML = `
-      ${this.options.content ? `<div class="dialog-content standard-form">${group.outerHTML}</div>` : ""}
-      <footer class="form-footer">${this._renderButtons()}</footer>
-    `;
+        form.innerHTML = `<div class="dialog-content standard-form">${group.outerHTML}</div>
+                          <footer class="form-footer">${this._renderButtons()}</footer>`;
         form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event));
         return form;
     }
