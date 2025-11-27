@@ -163,7 +163,7 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: false,
         type: new foundry.data.fields.StringField(),
-        default: game.world._source.id
+        default: game.world?._source?.id ?? ""
     },
     [SETTINGS.WORLD_TITLE]: {
         key: SETTINGS.WORLD_TITLE,
@@ -173,7 +173,7 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: false,
         type: new foundry.data.fields.StringField(),
-        default: game.world._source.title
+        default: game.world?._source?.title ?? ""
     },
     [SETTINGS.FOUNDRY_VERSION]: {
         key: SETTINGS.FOUNDRY_VERSION,
@@ -183,7 +183,7 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: false,
         type: new foundry.data.fields.StringField(),
-        default: game.version
+        default: game?.version ?? ""
     },
     [SETTINGS.SYSTEM_ID]: {
         key: SETTINGS.SYSTEM_ID,
@@ -193,7 +193,7 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: false,
         type: new foundry.data.fields.StringField(),
-        default: game.system._source.id
+        default: game.system?._source?.id ?? ""
     },
     [SETTINGS.SYSTEM_TITLE]: {
         key: SETTINGS.SYSTEM_TITLE,
@@ -203,7 +203,7 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: false,
         type: new foundry.data.fields.StringField(),
-        default: game.system._source.title
+        default: game.system?._source?.title ?? ""
     },
     [SETTINGS.SYSTEM_VERSION]: {
         key: SETTINGS.SYSTEM_VERSION,
@@ -213,6 +213,6 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: false,
         type: new foundry.data.fields.StringField(),
-        default: game.system._source.version
+        default: game.system?._source?.version ?? ""
     }
 }
