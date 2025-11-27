@@ -28,13 +28,22 @@ const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (field: f
 };
 
 export const SETTINGS = {
+    //Websoket Setting
     WS_RELAY_URL: 'wsRelayUrl',
     API_KEY: "apiKey",
     CUSTOM_NAME: "customName",
     LOG_LEVEL: "logLevel",
     PING_INTERVAL: "pingInterval",
     RECONNECT_MAX_ATTEMPTS: "reconnectMaxAttempts",
-    RECONNECT_BASE_DELAY: "reconnectBaseDelay"
+    RECONNECT_BASE_DELAY: "reconnectBaseDelay",
+    //Client Info
+    CLIENT_ID: 'clientId',
+    WORLD_ID: 'worldId',
+    WORLD_TITLE: 'worldTitle',
+    FOUNDRY_VERSION: 'foundryVersion',
+    SYSTEM_ID: 'systemId',
+    SYSTEM_TITLE: 'systemTitle',
+    SYSTEM_VERSION: 'systemVersion'
 };
 
 export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
@@ -127,3 +136,76 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         default: 1000
     }
 };
+
+export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
+    [SETTINGS.CLIENT_ID]: {
+        key: SETTINGS.CLIENT_ID,
+        namespace: MODULE_NAMESPACE,
+        name: "Client ID",
+        hint: "UniqueID for connect WebSocket relay server",
+        scope: "world",     // This specifies a world-level setting         
+        config: false,      // This specifies that the setting appears in the configuration view
+        type: new foundry.data.fields.StringField(),
+        default: ""
+    },
+    [SETTINGS.WORLD_ID]: {
+        key: SETTINGS.WORLD_ID,
+        namespace: MODULE_NAMESPACE,
+        name: "World ID",
+        hint: "Foundry world identifier",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField(),
+        default: game.world._source.id
+    },
+    [SETTINGS.WORLD_TITLE]: {
+        key: SETTINGS.WORLD_TITLE,
+        namespace: MODULE_NAMESPACE,
+        name: "World Title",
+        hint: "Foundry world title",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField(),
+        default: game.world._source.title
+    },
+    [SETTINGS.FOUNDRY_VERSION]: {
+        key: SETTINGS.FOUNDRY_VERSION,
+        namespace: MODULE_NAMESPACE,
+        name: "Foundry Version",
+        hint: "Running Foundry VTT version",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField(),
+        default: game.version
+    },
+    [SETTINGS.SYSTEM_ID]: {
+        key: SETTINGS.SYSTEM_ID,
+        namespace: MODULE_NAMESPACE,
+        name: "System ID",
+        hint: "Game system identifier",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField(),
+        default: game.system._source.id
+    },
+    [SETTINGS.SYSTEM_TITLE]: {
+        key: SETTINGS.SYSTEM_TITLE,
+        namespace: MODULE_NAMESPACE,
+        name: "System Title",
+        hint: "Game system title",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField(),
+        default: game.system._source.title
+    },
+    [SETTINGS.SYSTEM_VERSION]: {
+        key: SETTINGS.SYSTEM_VERSION,
+        namespace: MODULE_NAMESPACE,
+        name: "System Version",
+        hint: "Game system version",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField(),
+        default: game.system._source.version
+    }
+}

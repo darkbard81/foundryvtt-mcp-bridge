@@ -1,4 +1,4 @@
-import { moduleId, MODULE_NAMESPACE, SETTINGS_DATA } from './constants';
+import { moduleId, MODULE_NAMESPACE, SETTINGS, SETTINGS_DATA, SETTINGS_SYSTEM } from './constants';
 import { ModuleLogger } from "./utils/logger";
 import { FoundryRestApi } from "./types";
 import { initializeWebSocket } from "./network/webSocketEndpoints";
@@ -12,10 +12,16 @@ foundry.helpers.Hooks.once('init', () => {
         // config: foundry.types.SettingConfig
         game.settings.register(MODULE_NAMESPACE, config.key, config);
     }
-    game.settings.registerMenu(MODULE_NAMESPACE, "mySettingsMenu", {
-        name: "My Settings Submenu",
-        label: "Settings Menu Label",      // The text label used in the button
-        hint: "A description of what will occur in the submenu dialog.",
+
+    for (const config of Object.values(SETTINGS_SYSTEM)) {
+        // config: foundry.types.SettingConfig
+        game.settings.register(MODULE_NAMESPACE, config.key, config);
+    }
+
+    game.settings.registerMenu(MODULE_NAMESPACE, "clientInformation", {
+        name: "Client Information",
+        label: "Client Information",      // The text label used in the button
+        hint: "Configure client information in this submenu.",
         icon: "fa-solid fa-bars",               // A Font Awesome icon used in the submenu button
         type: Popup_SETTING_INFO as typeof foundry.applications.api.ApplicationV2,   // DialogV2 extends ApplicationV2 but has a narrower ctor type; cast for registerMenu typing
         restricted: true                   // Restrict this submenu to gamemaster only?
@@ -29,6 +35,7 @@ foundry.helpers.Hooks.once('init', () => {
                 ModuleLogger.warn(`WebSocketManager requested but not initialized`);
                 return null;
             }
+            game.settings.set(MODULE_NAMESPACE, SETTINGS.CLIENT_ID, module.socketManager.getClientId());
             return module.socketManager;
         },
         getByUuid: async (uuid: string) => {

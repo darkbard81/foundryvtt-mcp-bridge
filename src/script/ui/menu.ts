@@ -1,5 +1,5 @@
 
-import { moduleId, SETTINGS, SETTINGS_DATA } from '../constants';
+import { moduleId, SETTINGS, SETTINGS_DATA, SETTINGS_SYSTEM } from '../constants';
 import { ModuleLogger } from '../utils/logger';
 
 
@@ -29,7 +29,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
         const htmlContents = document.createElement("section");
         htmlContents.className = "tab scrollable active";
 
-        for (const config of Object.values(SETTINGS_DATA)) {
+        for (const config of Object.values(SETTINGS_SYSTEM)) {
             // config: foundry.types.SettingConfig
             const group = document.createElement("div");
             group.className = "form-group";
