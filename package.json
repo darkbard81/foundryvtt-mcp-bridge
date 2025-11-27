@@ -1,0 +1,28 @@
+{
+  "name": "fvtt-mcp-mjs",
+  "version": "0.0.1",
+  "description": "A MCP API for Foundry VTT",
+  "author": "darkbard81",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "tsc && vite build",
+    "dev": "tsc && vite build --watch",
+    "createSymlinks": "node ./tools/create-symlinks.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "js-yaml": "^4.1.1",
+    "path": "^0.12.7",
+    "rollup": "^4.53.3",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-scss": "^4.0.1",
+    "tsc": "^2.0.4",
+    "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "typescript": "^5.9.3"
+  }
+}

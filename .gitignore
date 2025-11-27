@@ -1,0 +1,7 @@
+foundry-config.yaml
+foundry
+tools
+dist
+node_modules
+.vscode
+.env    

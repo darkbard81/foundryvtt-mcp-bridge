@@ -1,0 +1,107 @@
+import { id } from '../module.json';
+import { FormInput_API_KEY } from './ui/menu';
+
+export const moduleId = id;
+
+export const MODULE_NAMESPACE: string = id;
+
+export const SETTINGS = {
+    WS_RELAY_URL: 'wsRelayUrl',
+    API_KEY: "apiKey",
+    CUSTOM_NAME: "customName",
+    LOG_LEVEL: "logLevel",
+    PING_INTERVAL: "pingInterval",
+    RECONNECT_MAX_ATTEMPTS: "reconnectMaxAttempts",
+    RECONNECT_BASE_DELAY: "reconnectBaseDelay"
+};
+
+export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
+    [SETTINGS.WS_RELAY_URL]: {
+        key: SETTINGS.WS_RELAY_URL,
+        namespace: MODULE_NAMESPACE,
+        name: "WebSocket Relay URL",
+        hint: "The URL of the WebSocket relay server.",
+        scope: "world",     // This specifies a world-level setting         
+        config: true,      // This specifies that the setting appears in the configuration view
+        type: new foundry.data.fields.StringField(),
+        default: "ws://localhost:8080"
+    },
+
+    [SETTINGS.API_KEY]: {
+        key: SETTINGS.API_KEY,
+        namespace: MODULE_NAMESPACE,
+        name: "API Key",
+        hint: "API Key for authentication with the relay server",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.StringField(),
+        default: "",
+        input: FormInput_API_KEY
+    },
+
+    [SETTINGS.CUSTOM_NAME]: {
+        key: SETTINGS.CUSTOM_NAME,
+        namespace: MODULE_NAMESPACE,
+        name: "Custom Client Name",
+        hint: "A custom name to identify this client (optional)",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.StringField(),
+        default: ""
+    },
+
+    [SETTINGS.LOG_LEVEL]: {
+        key: SETTINGS.LOG_LEVEL,
+        namespace: MODULE_NAMESPACE,
+        name: "Log Level",
+        hint: "Set the level of detail for module logging",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.NumberField(),
+        choices: {
+            0: "debug",
+            1: "info",
+            2: "warn",
+            3: "error"
+        },
+        default: 2
+    },
+
+    [SETTINGS.PING_INTERVAL]: {
+        key: SETTINGS.PING_INTERVAL,
+        namespace: MODULE_NAMESPACE,
+        name: "Ping Interval (seconds)",
+        hint: "How often (in seconds) the module sends a ping to the relay server to keep the connection alive.",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.NumberField(),
+        default: 30,
+        range: {
+            min: 5,
+            max: 600,
+            step: 1
+        }
+    },
+
+    [SETTINGS.RECONNECT_MAX_ATTEMPTS]: {
+        key: SETTINGS.RECONNECT_MAX_ATTEMPTS,
+        namespace: MODULE_NAMESPACE,
+        name: "Max Reconnect Attempts",
+        hint: "Maximum number of times the module will try to reconnect after losing connection.",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.NumberField(),
+        default: 20
+    },
+
+    [SETTINGS.RECONNECT_BASE_DELAY]: {
+        key: SETTINGS.RECONNECT_BASE_DELAY,
+        namespace: MODULE_NAMESPACE,
+        name: "Reconnect Base Delay (ms)",
+        hint: "Initial delay (in milliseconds) before the first reconnect attempt. Subsequent attempts use exponential backoff.",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.NumberField(),
+        default: 1000
+    }
+};

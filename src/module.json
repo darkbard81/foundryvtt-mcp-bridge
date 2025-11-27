@@ -1,0 +1,33 @@
+{
+    "id": "slamon-mcp-bridge",
+    "title": "Slamon's MCP Bridge",
+    "description": "Provides an MCP bridge for communicating with Foundry VTT.",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Slamon",
+            "url": "https://github.com/darkbard81"
+        }
+    ],
+    "license": "MIT",
+    "url": "https://github.com/darkbard81/foundryvtt-mcp-bridge",
+    "bugs": "https://github.com/darkbard81/foundryvtt-mcp-bridge/issues",
+    "compatibility": {
+        "minimum": "13",
+        "verified": "13",
+        "maximum": "13"
+    },
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "languages/en.json"
+        }
+    ],
+    "styles": [
+        "styles/style.css"
+    ],
+    "esmodules": [
+        "scripts/module.mjs"
+    ]
+}

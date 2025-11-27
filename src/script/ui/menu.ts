@@ -1,0 +1,118 @@
+
+import { moduleId, MODULE_NAMESPACE, SETTINGS_DATA } from '../constants';
+import { ModuleLogger } from '../utils/logger';
+
+export const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (field: foundry.data.fields.DataField, config: foundry.data.types.FormInputConfig) => {
+    const group = document.createElement("div");
+    group.className = "form-group";
+
+    const id = config.id ?? config.name; // for/id 매칭
+    const label = document.createElement("label");
+    label.htmlFor = id;
+    label.textContent = "API Key";
+
+    const fields = document.createElement("div");
+    fields.className = "form-fields";
+    const input = document.createElement("input");
+    input.type = "password";
+    input.id = id;
+    input.name = config.name;
+    input.value = config.value as string ?? "";
+    input.autocomplete = "one-time-code";
+    fields.append(input);
+
+    group.append(label, fields);
+    return group; // HTMLElement 반환
+};
+
+export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
+
+    // /** @override */
+    // constructor(options = {}) {
+    //     super({
+    //         window: { title: "Choose an option" }
+    //     });
+    // }
+
+    /** @inheritDoc */
+    static DEFAULT_OPTIONS = {
+        id: "dialog-{id}",
+        classes: ["dialog"],
+        tag: "dialog",
+        form: {
+            closeOnSubmit: true
+        },
+        window: {
+            title: "Server Info",
+            frame: true,
+            positioned: true,
+            minimizable: false
+        }
+    };
+
+    /** @override */
+    async _renderHTML(_context: any, _options: any) {
+        // this.options.content = 's';
+        const group = document.createElement("div");
+        group.className = "form-group";
+        for (const config of Object.values(SETTINGS_DATA)) {
+            // config: foundry.types.SettingConfig
+            const input = document.createElement("input");
+            input.id = config.namespace && config.key;
+            input.name = config.name;
+            input.value = game.settings.get(moduleId, config.key);
+            input.readOnly = true;
+            input.type = config.type === FormInput_API_KEY ? "password" : "text";
+
+            const label = document.createElement("label");
+            label.htmlFor = input.id;
+            label.textContent = input.name;
+            label.append(input);
+
+            input.addEventListener("pointerdown", async (event) => {
+                event.preventDefault(); // 클릭/포커스/submit 연쇄를 막고
+                event.stopPropagation();
+                try {
+                    await navigator.clipboard.writeText(input.value ?? "");
+                    ui.notifications?.info("Copied to clipboard.");
+                } catch (err) {
+                    ModuleLogger.warn("Clipboard copy failed", err);
+                    ui.notifications?.warn("Fail copied to clipboard.");
+                }
+            });
+            group.append(label);
+        }
+        const form = document.createElement("form");
+        form.className = "dialog-form standard-form";
+        form.autocomplete = "off";
+        form.innerHTML = `
+      ${this.options.content ? `<div class="dialog-content standard-form">${group.outerHTML}</div>` : ""}
+      <footer class="form-footer">${this._renderButtons()}</footer>
+    `;
+        form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event));
+        return form;
+    }
+
+    /** @override */
+    _renderButtons() {
+        const button = document.createElement("button");
+        button.setAttribute("type", "submit");
+        button.setAttribute("data-action", "ok");
+        const span = document.createElement("span");
+        span.innerText = game.i18n.localize("button-ok");
+        button.appendChild(span);
+        return button.outerHTML;
+    }
+
+    /** @override */
+    async _onSubmit(target: HTMLButtonElement, event: PointerEvent | SubmitEvent) {
+        event.preventDefault(); // Prevent default browser dialog dismiss behavior.
+        event.stopPropagation();
+        return this.close({ submitted: true });
+    }
+
+    /** @override */
+    static show(options = {}) {
+        return new this().render({ force: true, ...options });
+    }
+}

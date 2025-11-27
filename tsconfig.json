@@ -1,0 +1,39 @@
+{
+  "include": [
+    "foundry/common/primitives/global.d.mts",
+    "foundry/client/global.d.mts",
+    "foundry/client/**/*.mjs",
+    "foundry/setup/**/*.mjs",
+    "src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "allowJs": true,
+    "checkJs": false,
+    // "declaration": true,
+    // "emitDeclarationOnly": true,
+    "lib": [
+      "ES2023",
+      "ESNext.Array",
+      "ESNext.AsyncIterable",
+      "ESNext.Collection",
+      "ESNext.Iterator",
+      "ESNext.Object",
+      "ESNext.Promise",
+      "DOM",
+      "DOM.Iterable",
+      "DOM.AsyncIterable"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "target": "ESNext",
+    // "outDir": "./_dts",
+    "skipLibCheck": true,
+    "paths": {
+      "@common/*": ["./foundry/common/*"],
+      "@client/*": ["./foundry/client/*"],
+      "@setup/*": ["./foundry/setup/*"]
+    }
+  }
+}
