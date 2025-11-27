@@ -13,11 +13,6 @@ foundry.helpers.Hooks.once('init', () => {
         game.settings.register(MODULE_NAMESPACE, config.key, config);
     }
 
-    for (const config of Object.values(SETTINGS_SYSTEM)) {
-        // config: foundry.types.SettingConfig
-        game.settings.register(MODULE_NAMESPACE, config.key, config);
-    }
-
     game.settings.registerMenu(MODULE_NAMESPACE, "clientInformation", {
         name: "Client Information",
         label: "Client Information",      // The text label used in the button
@@ -35,7 +30,6 @@ foundry.helpers.Hooks.once('init', () => {
                 ModuleLogger.warn(`WebSocketManager requested but not initialized`);
                 return null;
             }
-            game.settings.set(MODULE_NAMESPACE, SETTINGS.CLIENT_ID, module.socketManager.getClientId());
             return module.socketManager;
         },
         getByUuid: async (uuid: string) => {
@@ -54,4 +48,11 @@ foundry.helpers.Hooks.once("ready", () => {
     setTimeout(() => {
         initializeWebSocket();
     }, 1000);
+
+    for (const config of Object.values(SETTINGS_SYSTEM)) {
+        // config: foundry.types.SettingConfig
+        game.settings.register(MODULE_NAMESPACE, config.key, config);
+    }
+    const module = game.modules.get(moduleId) as FoundryRestApi;
+    game.settings.set(MODULE_NAMESPACE, SETTINGS.CLIENT_ID, module.socketManager?.getClientId());
 });
