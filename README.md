@@ -42,5 +42,7 @@ Foundry VTT에 MCP(Message Control Protocol) 연동을 위한 WebSocket 브리�
 - 번들: `npm run build` (tsc 후 vite build)
 - 개발 감시 빌드: `npm run dev`
 
-## 라이선스
-MIT License
+## 라이선스·크레딧
+- MIT License
+- 기반: [ThreeHats/foundryvtt-rest-api](https://github.com/ThreeHats/foundryvtt-rest-api) · [ThreeHats/foundryvtt-rest-api-relay](https://github.com/ThreeHats/foundryvtt-rest-api-relay)
+- 포크/추가 작업: [darkbard81](https://github.com/darkbard81)
