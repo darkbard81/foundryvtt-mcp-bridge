@@ -27,6 +27,7 @@ export const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (f
 
 export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
 
+    private renderCount: number = 0;
     /**
      * @override
      * Applications are constructed by providing an object of configuration options.
@@ -45,12 +46,14 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
         }, options));
     }
 
+
     /** @override */
     override async _renderHTML(_context: any, _options: any) {
-        // this.options.content = 's';
-        const htmlContents = document.createElement("div");
+        const htmlContents = document.createElement("section");
+        htmlContents.className = "tab scrollable active";
 
         for (const config of Object.values(SETTINGS_DATA)) {
+            this.renderCount = this.renderCount + 1;
             const group = document.createElement("div");
             group.className = "form-group";
 
@@ -59,7 +62,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             const input = document.createElement("input");
             input.id = config.namespace && config.key;
             input.name = config.name;
-            input.value = game.settings.get(moduleId, config.key) as string;
+            input.value = game.settings.get(moduleId, config.key) ?? `${this.renderCount}`;
             input.readOnly = true;
             input.type = config.type === FormInput_API_KEY ? "password" : "text";
             fields.append(input);
@@ -68,7 +71,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             label.htmlFor = input.id;
             label.textContent = input.name;
 
-            input.addEventListener("pointerdown", async (event) => {
+            input.addEventListener("click", async (event) => {
                 event.preventDefault(); // 클릭/포커스/submit 연쇄를 막고
                 event.stopPropagation();
                 try {
