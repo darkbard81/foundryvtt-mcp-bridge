@@ -1,5 +1,8 @@
 name: Publish Module
 
+env:
+  RELEASE_NOTES: ""
+
 on:
   push:
     tags:

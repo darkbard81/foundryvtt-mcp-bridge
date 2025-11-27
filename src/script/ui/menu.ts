@@ -27,28 +27,22 @@ export const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (f
 
 export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
 
-    // /** @override */
-    // constructor(options = {}) {
-    //     super({
-    //         window: { title: "Choose an option" }
-    //     });
-    // }
-
-    /** @inheritDoc */
-    static DEFAULT_OPTIONS = {
-        id: "dialog-{id}",
-        classes: ["dialog"],
-        tag: "dialog",
-        form: {
-            closeOnSubmit: true
-        },
-        window: {
-            title: "Server Info",
-            frame: true,
-            positioned: true,
-            minimizable: false
-        }
-    };
+    /**
+     * Applications are constructed by providing an object of configuration options.
+     * @param {Partial<Configuration>} [options]    Options used to configure the Application instance
+     */
+    constructor(options = {}) {
+        super(foundry.utils.mergeObject({
+            window: { title: "System Infomation" },
+            content: "",
+            buttons: [{
+                action: "ok",
+                label: "OK",
+                default: true,
+                callback: () => this.close({ submitted: true })
+            }]
+        }, options));
+    }
 
     /** @override */
     async _renderHTML(_context: any, _options: any) {
@@ -91,17 +85,6 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
     `;
         form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event));
         return form;
-    }
-
-    /** @override */
-    _renderButtons() {
-        const button = document.createElement("button");
-        button.setAttribute("type", "submit");
-        button.setAttribute("data-action", "ok");
-        const span = document.createElement("span");
-        span.innerText = game.i18n.localize("button-ok");
-        button.appendChild(span);
-        return button.outerHTML;
     }
 
     /** @override */
