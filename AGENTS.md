@@ -27,3 +27,10 @@
 - 예: `env PATH=/home/deck/.nvm/versions/node/v20.19.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin npm run check`, `npm run check_codex` 등.
 - 더 간단히는 node/npm 풀 경로 사용: `/home/deck/.nvm/versions/node/v20.19.5/bin/node -v`, `/home/deck/.nvm/versions/node/v20.19.5/bin/npm run check`.
 - Flatpak override로 PATH를 덮어쓸 수 있으나 부담되면 위 방식으로만 실행한다.
+
+## 커밋 메시지 작성 기준
+
+- Conventional Commits 형식을 사용한다: `타입(scope): 설명`.
+- 모든 메시지는 한국어로 작성한다.
+- 타입 예시: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `perf`, `style`, `build`, `ci`, `revert`.
+- scope는 선택 사항으로 영향 범위를 명시한다. 예) `feat(ui): 클라이언트 정보 설정 추가`.
