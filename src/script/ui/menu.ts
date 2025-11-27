@@ -46,23 +46,27 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
     }
 
     /** @override */
-    async _renderHTML(_context: any, _options: any) {
+    override async _renderHTML(_context: any, _options: any) {
         // this.options.content = 's';
-        const group = document.createElement("div");
-        group.className = "form-group";
+        const htmlContents = document.createElement("div");
+
         for (const config of Object.values(SETTINGS_DATA)) {
-            // config: foundry.types.SettingConfig
+            const group = document.createElement("div");
+            group.className = "form-group";
+
+            const fields = document.createElement("div");
+            fields.className = "form-fields";
             const input = document.createElement("input");
             input.id = config.namespace && config.key;
             input.name = config.name;
-            input.value = game.settings.get(moduleId, config.key);
+            input.value = game.settings.get(moduleId, config.key) as string;
             input.readOnly = true;
             input.type = config.type === FormInput_API_KEY ? "password" : "text";
+            fields.append(input);
 
             const label = document.createElement("label");
             label.htmlFor = input.id;
             label.textContent = input.name;
-            label.append(input);
 
             input.addEventListener("pointerdown", async (event) => {
                 event.preventDefault(); // 클릭/포커스/submit 연쇄를 막고
@@ -75,26 +79,30 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
                     ui.notifications?.warn("Fail copied to clipboard.");
                 }
             });
-            group.append(label);
+            group.append(label, fields);
+            htmlContents.append(group);
         }
         const form = document.createElement("form");
         form.className = "dialog-form standard-form";
         form.autocomplete = "off";
-        form.innerHTML = `<div class="dialog-content standard-form">${group.outerHTML}</div>
+        form.innerHTML = `<div class="dialog-content standard-form">${htmlContents.outerHTML}</div>
                           <footer class="form-footer">${this._renderButtons()}</footer>`;
         form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event));
         return form;
     }
 
     /** @override */
-    async _onSubmit(target: HTMLButtonElement, event: PointerEvent | SubmitEvent) {
+    override async _onSubmit(target: HTMLButtonElement, event: PointerEvent | SubmitEvent) {
         event.preventDefault(); // Prevent default browser dialog dismiss behavior.
         event.stopPropagation();
         return this.close({ submitted: true });
     }
 
     /** @override */
-    static show(options = {}) {
-        return new this().render({ force: true, ...options });
+    override async render(options = {}, _options = {}) {
+        const normalized = typeof options === "boolean"
+            ? Object.assign(_options, { force: options })
+            : options ?? {};
+        return super.render({ force: true, ...normalized }, _options);
     }
 }

@@ -11,6 +11,7 @@
     "strict": true,
     "allowJs": true,
     "checkJs": false,
+    "noImplicitOverride": true,
     // "declaration": true,
     // "emitDeclarationOnly": true,
     "lib": [
