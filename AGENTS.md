@@ -6,6 +6,7 @@
 
 - 사용 프로그래밍 언어: JavaScript ESM, TypeScript (Node.js 환경)
 - 기본 응답 언어: 한국어
+- 커밋메시지 작성 언어: 한국어
 - 개발 목표: Foundry VTT Module개발
 
 ## 사용자 숙련도별 응답 가이드
