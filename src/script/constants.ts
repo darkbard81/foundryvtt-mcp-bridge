@@ -133,7 +133,7 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         name: "API Key",
         hint: "API Key for authentication with the relay server",
         scope: "world",
-        config: true,
+        config: false,
         type: new foundry.data.fields.StringField(),
         default: CONST.PASSWORD_SAFE_STRING,
         input: FormInput_API_KEY

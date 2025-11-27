@@ -78,16 +78,21 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
         form.append(content, footer);
         // form.innerHTML = `<div class="dialog-content standard-form">${htmlContents.outerHTML}</div>
         //                   <footer class="form-footer">${this._renderButtons()}</footer>`;
-        form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event));
+        form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event, form));
         return form;
     }
 
     /** @override */
-    override async _onSubmit(target: HTMLButtonElement, event: PointerEvent | SubmitEvent) {
+    override async _onSubmit(target: HTMLButtonElement, event: PointerEvent | SubmitEvent, form?: HTMLFormElement) {
         event.preventDefault(); // Prevent default browser dialog dismiss behavior.
         event.stopPropagation();
-        const form = event.currentTarget as HTMLFormElement;
-        const formData = new FormData(form);
+        const activeForm = form ?? (event.currentTarget instanceof HTMLFormElement ? event.currentTarget : null);
+        if (!activeForm) {
+            ModuleLogger.warn("Submit received without a form element");
+            return this.close({ submitted: false });
+        }
+
+        const formData = new FormData(activeForm);
         const prevApiKey = game.settings.get(moduleId, SETTINGS.API_KEY);
         const nextApiKey = String(formData.get(SETTINGS.API_KEY) ?? "");
         const apiKeyChanged = nextApiKey !== prevApiKey;
