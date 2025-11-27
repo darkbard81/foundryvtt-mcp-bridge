@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "check": "tsc --noEmit",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "dev": "tsc && vite build --watch",
     "createSymlinks": "node ./tools/create-symlinks.mjs"
   },
