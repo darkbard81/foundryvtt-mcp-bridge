@@ -88,8 +88,18 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
         const form = document.createElement("form");
         form.className = "dialog-form standard-form";
         form.autocomplete = "off";
-        form.innerHTML = `<div class="dialog-content standard-form">${htmlContents.outerHTML}</div>
-                          <footer class="form-footer">${this._renderButtons()}</footer>`;
+
+        const content = document.createElement("div");
+        content.className = "dialog-content standard-form";
+        content.append(htmlContents);
+
+        const footer = document.createElement("footer");
+        footer.className = "form-footer";
+        footer.innerHTML = this._renderButtons();
+
+        form.append(content, footer);
+        // form.innerHTML = `<div class="dialog-content standard-form">${htmlContents.outerHTML}</div>
+        //                   <footer class="form-footer">${this._renderButtons()}</footer>`;
         form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event));
         return form;
     }
