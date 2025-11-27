@@ -1,6 +1,6 @@
 {
-  "name": "fvtt-mcp-mjs",
-  "version": "0.0.2",
+  "name": "foundryvtt-mcp-bridge",
+  "version": "0.0.6",
   "description": "A MCP API for Foundry VTT",
   "author": "darkbard81",
   "license": "MIT",
