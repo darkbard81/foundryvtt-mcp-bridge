@@ -1,9 +1,31 @@
 import { id } from '../module.json';
-import { FormInput_API_KEY } from './ui/menu';
 
 export const moduleId = id;
 
 export const MODULE_NAMESPACE: string = id;
+
+const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (field: foundry.data.fields.DataField, config: foundry.data.types.FormInputConfig) => {
+    const group = document.createElement("div");
+    group.className = "form-group";
+
+    const id = config.id ?? config.name; // for/id 매칭
+    const label = document.createElement("label");
+    label.htmlFor = id;
+    label.textContent = "API Key";
+
+    const fields = document.createElement("div");
+    fields.className = "form-fields";
+    const input = document.createElement("input");
+    input.type = "password";
+    input.id = id;
+    input.name = config.name;
+    input.value = config.value as string ?? "";
+    input.autocomplete = "one-time-code";
+    fields.append(input);
+
+    group.append(label, fields);
+    return group; // HTMLElement 반환
+};
 
 export const SETTINGS = {
     WS_RELAY_URL: 'wsRelayUrl',
@@ -35,7 +57,7 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: true,
         type: new foundry.data.fields.StringField(),
-        default: "",
+        default: CONST.PASSWORD_SAFE_STRING,
         input: FormInput_API_KEY
     },
 

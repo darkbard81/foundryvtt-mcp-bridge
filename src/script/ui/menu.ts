@@ -1,33 +1,10 @@
 
-import { moduleId, MODULE_NAMESPACE, SETTINGS_DATA } from '../constants';
+import { moduleId, SETTINGS, SETTINGS_DATA } from '../constants';
 import { ModuleLogger } from '../utils/logger';
 
-export const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (field: foundry.data.fields.DataField, config: foundry.data.types.FormInputConfig) => {
-    const group = document.createElement("div");
-    group.className = "form-group";
-
-    const id = config.id ?? config.name; // for/id 매칭
-    const label = document.createElement("label");
-    label.htmlFor = id;
-    label.textContent = "API Key";
-
-    const fields = document.createElement("div");
-    fields.className = "form-fields";
-    const input = document.createElement("input");
-    input.type = "password";
-    input.id = id;
-    input.name = config.name;
-    input.value = config.value as string ?? "";
-    input.autocomplete = "one-time-code";
-    fields.append(input);
-
-    group.append(label, fields);
-    return group; // HTMLElement 반환
-};
 
 export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
 
-    private renderCount: number = 0;
     /**
      * @override
      * Applications are constructed by providing an object of configuration options.
@@ -53,7 +30,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
         htmlContents.className = "tab scrollable active";
 
         for (const config of Object.values(SETTINGS_DATA)) {
-            this.renderCount = this.renderCount + 1;
+            // config: foundry.types.SettingConfig
             const group = document.createElement("div");
             group.className = "form-group";
 
@@ -62,9 +39,10 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             const input = document.createElement("input");
             input.id = config.namespace && config.key;
             input.name = config.name;
-            input.value = game.settings.get(moduleId, config.key) ?? `${this.renderCount}`;
+            input.value = game.settings.get(moduleId, config.key);
             input.readOnly = true;
-            input.type = config.type === FormInput_API_KEY ? "password" : "text";
+            input.type = config.key === SETTINGS.API_KEY ? "password" : "text";
+            input.autocomplete = "off";
             fields.append(input);
 
             const label = document.createElement("label");
