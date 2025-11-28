@@ -13,6 +13,11 @@ foundry.helpers.Hooks.once('init', () => {
         game.settings.register(MODULE_NAMESPACE, config.key, config);
     }
 
+    for (const config of Object.values(SETTINGS_SYSTEM)) {
+        // config: foundry.types.SettingConfig
+        game.settings.register(MODULE_NAMESPACE, config.key, config);
+    }
+
     game.settings.registerMenu(MODULE_NAMESPACE, "clientInformation", {
         name: "Client Information",
         label: "Client Information",      // The text label used in the button
@@ -50,37 +55,6 @@ foundry.helpers.Hooks.once("ready", () => {
 
         const module = game.modules.get(moduleId) as FoundryRestApi;
         const webSocketManager = module.api.getWebSocketManager();
-
-        for (const config of Object.values(SETTINGS_SYSTEM)) {
-            // config: foundry.types.SettingConfig
-            if (config.default === "") {
-                switch (config.key) {
-                    case SETTINGS.CLIENT_ID:
-                        config.default = webSocketManager?.getClientId();
-                        break;
-                    case SETTINGS.WORLD_ID:
-                        config.default = game.world?._source?.id;
-                        break;
-                    case SETTINGS.WORLD_TITLE:
-                        config.default = game.world?._source?.title;
-                        break;
-                    case SETTINGS.FOUNDRY_VERSION:
-                        config.default = game.version;
-                        break;
-                    case SETTINGS.SYSTEM_ID:
-                        config.default = game.system?._source?.id;
-                        break;
-                    case SETTINGS.SYSTEM_TITLE:
-                        config.default = game.system?._source?.title;
-                        break;
-                    case SETTINGS.SYSTEM_VERSION:
-                        config.default = game.system?._source?.version;
-                        break;
-                    default:
-                        break;
-                }
-            };
-            game.settings.register(MODULE_NAMESPACE, config.key, config);
-        }
+        game.settings.set(MODULE_NAMESPACE, SETTINGS.CLIENT_ID, webSocketManager?.getClientId());
     }, 1000);
 });
