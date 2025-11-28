@@ -60,6 +60,8 @@ foundry.helpers.Hooks.once("ready", () => {
             // config: foundry.types.SettingConfig
             if (config.default === "") {
                 switch (config.key) {
+                    case SETTINGS.API_KEY:
+                        continue;
                     case SETTINGS.CLIENT_ID:
                         config.default = webSocketManager?.getClientId();
                         break;
