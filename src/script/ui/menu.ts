@@ -97,11 +97,12 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
 
         const formData = new FormData(activeForm);
         const prevApiKey = game.settings.get(moduleId, SETTINGS.API_KEY);
-        const nextApiKey = String(formData.get(SETTINGS.API_KEY) ?? "");
+        const nextApiKey = String(formData.get(SETTINGS_SYSTEM[SETTINGS.API_KEY].name) ?? "");
         const apiKeyChanged = nextApiKey !== prevApiKey;
 
         if (apiKeyChanged) {
             await game.settings.set(moduleId, SETTINGS.API_KEY, nextApiKey);
+            foundry.applications.settings.SettingsConfig.reloadConfirm();
         }
         return this.close({ submitted: true });
     }

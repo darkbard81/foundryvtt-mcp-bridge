@@ -46,6 +46,10 @@ export const SETTINGS = {
     SYSTEM_VERSION: 'systemVersion'
 };
 
+const promptReload = (_value?: unknown) => {
+  foundry.applications.settings.SettingsConfig.reloadConfirm();
+};
+
 export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
     [SETTINGS.WS_RELAY_URL]: {
         key: SETTINGS.WS_RELAY_URL,
@@ -55,7 +59,8 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         scope: "world",     // This specifies a world-level setting         
         config: true,      // This specifies that the setting appears in the configuration view
         type: new foundry.data.fields.StringField(),
-        default: "ws://localhost:8080"
+        default: "ws://localhost:8080",
+        onChange: promptReload
     },
 
     [SETTINGS.CUSTOM_NAME]: {
@@ -66,7 +71,8 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: true,
         type: new foundry.data.fields.StringField(),
-        default: ""
+        default: "",
+        onChange: promptReload
     },
 
     [SETTINGS.LOG_LEVEL]: {
@@ -83,7 +89,8 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
             2: "warn",
             3: "error"
         },
-        default: 2
+        default: 2,
+        onChange: promptReload
     },
 
     [SETTINGS.PING_INTERVAL]: {
@@ -99,7 +106,8 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
             min: 5,
             max: 600,
             step: 1
-        }
+        },
+        onChange: promptReload
     },
 
     [SETTINGS.RECONNECT_MAX_ATTEMPTS]: {
@@ -110,7 +118,8 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: true,
         type: new foundry.data.fields.NumberField(),
-        default: 20
+        default: 20,
+        onChange: promptReload
     },
 
     [SETTINGS.RECONNECT_BASE_DELAY]: {
@@ -121,7 +130,8 @@ export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: true,
         type: new foundry.data.fields.NumberField(),
-        default: 1000
+        default: 1000,
+        onChange: promptReload
     }
 };
 
@@ -136,7 +146,8 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         config: false,
         type: new foundry.data.fields.StringField(),
         default: "",
-        input: FormInput_API_KEY
+        input: FormInput_API_KEY,
+        onChange: promptReload
     },
 
     [SETTINGS.CLIENT_ID]: {
