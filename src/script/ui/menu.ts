@@ -4,31 +4,12 @@ import { ModuleLogger } from '../utils/logger';
 
 
 export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
- /**
-    * let guess;
- * try {
- *   guess = await foundry.applications.api.DialogV2.prompt({
- *     window: { title: "Guess a number between 1 and 10" },
- *     content: '<input name="guess" type="number" min="1" max="10" step="1" autofocus>',
- *     ok: {
- *       label: "Submit Guess",
- *       callback: (event, button, dialog) => button.form.elements.guess.valueAsNumber
- *     }
- *   });
- * } catch {
- *   console.log("User did not make a guess.");
- *   return;
- * }
- * const n = Math.ceil(CONFIG.Dice.randomUniform() * 10);
- * if ( n === guess ) console.log("User guessed correctly.");
- * else console.log("User guessed incorrectly.");
- */
- 
- /**
-     * @override
-     * Applications are constructed by providing an object of configuration options.
-     * @param {Partial<Configuration>} [options]    Options used to configure the Application instance
-     */
+
+    /**
+        * @override
+        * Applications are constructed by providing an object of configuration options.
+        * @param {Partial<Configuration>} [options]    Options used to configure the Application instance
+        */
     constructor(options = {}) {
         super(foundry.utils.mergeObject({
             window: { title: "System Infomation" },
@@ -56,7 +37,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             fields.className = "form-fields";
             const input = document.createElement("input");
             input.id = config.namespace && config.key;
-            input.name = config.key;
+            input.name = config.name;
             input.value = game.settings.get(moduleId, config.key);
             input.readOnly = config.key === SETTINGS.API_KEY ? false : true;
             input.type = config.key === SETTINGS.API_KEY ? "password" : "text";
@@ -67,17 +48,20 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             label.htmlFor = input.id;
             label.textContent = input.name;
 
-            input.addEventListener("click", async (event) => {
-                event.preventDefault(); // 클릭/포커스/submit 연쇄를 막고
-                event.stopPropagation();
-                try {
-                    await navigator.clipboard.writeText(input.value ?? "");
-                    ui.notifications?.info("Copied to clipboard.");
-                } catch (err) {
-                    ModuleLogger.warn("Clipboard copy failed", err);
-                    ui.notifications?.warn("Fail copied to clipboard.");
-                }
-            });
+            if (config.key !== SETTINGS.API_KEY) {
+                input.addEventListener("click", async (event) => {
+                    event.preventDefault(); // 클릭/포커스/submit 연쇄를 막고
+                    event.stopPropagation();
+                    try {
+                        await navigator.clipboard.writeText(input.value ?? "");
+                        ui.notifications?.info("Copied to clipboard.");
+                    } catch (err) {
+                        ModuleLogger.warn("Clipboard copy failed", err);
+                        ui.notifications?.warn("Fail copied to clipboard.");
+                    }
+                });
+            };
+
             group.append(label, fields);
             htmlContents.append(group);
         }
@@ -94,17 +78,18 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
         footer.innerHTML = this._renderButtons();
 
         form.append(content, footer);
-        // form.innerHTML = `<div class="dialog-content standard-form">${htmlContents.outerHTML}</div>
-        //                   <footer class="form-footer">${this._renderButtons()}</footer>`;
-        form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event, form));
+        form.addEventListener("submit", event => this._onSubmit(event.submitter as HTMLButtonElement, event));
         return form;
     }
 
     /** @override */
-    override async _onSubmit(target: HTMLButtonElement, event: PointerEvent | SubmitEvent, form?: HTMLFormElement) {
+    override async _onSubmit(target: HTMLButtonElement | null, event: PointerEvent | SubmitEvent) {
         event.preventDefault(); // Prevent default browser dialog dismiss behavior.
         event.stopPropagation();
-        const activeForm = form ?? (event.currentTarget instanceof HTMLFormElement ? event.currentTarget : null);
+
+        const action = target?.dataset.action ?? (event as any).submitter?.dataset.action;
+        const activeForm = this.element?.querySelector<HTMLFormElement>("form");
+
         if (!activeForm) {
             ModuleLogger.warn("Submit received without a form element");
             return this.close({ submitted: false });
