@@ -47,6 +47,7 @@ export const SETTINGS = {
 };
 
 const promptReload = (_value?: unknown) => {
+  console.log(_value);
   foundry.applications.settings.SettingsConfig.reloadConfirm();
 };
 

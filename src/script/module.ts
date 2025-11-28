@@ -85,7 +85,7 @@ foundry.helpers.Hooks.once("ready", () => {
                         break;
                 }
             };
-            game.settings.set(MODULE_NAMESPACE, config.key, config);
+            game.settings.set(MODULE_NAMESPACE, config.key, config.default);
         }
     }, 1000);
 });
