@@ -4,8 +4,27 @@ import { ModuleLogger } from '../utils/logger';
 
 
 export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
-
-    /**
+ /**
+    * let guess;
+ * try {
+ *   guess = await foundry.applications.api.DialogV2.prompt({
+ *     window: { title: "Guess a number between 1 and 10" },
+ *     content: '<input name="guess" type="number" min="1" max="10" step="1" autofocus>',
+ *     ok: {
+ *       label: "Submit Guess",
+ *       callback: (event, button, dialog) => button.form.elements.guess.valueAsNumber
+ *     }
+ *   });
+ * } catch {
+ *   console.log("User did not make a guess.");
+ *   return;
+ * }
+ * const n = Math.ceil(CONFIG.Dice.randomUniform() * 10);
+ * if ( n === guess ) console.log("User guessed correctly.");
+ * else console.log("User guessed incorrectly.");
+ */
+ 
+ /**
      * @override
      * Applications are constructed by providing an object of configuration options.
      * @param {Partial<Configuration>} [options]    Options used to configure the Application instance
@@ -17,8 +36,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             buttons: [{
                 action: "ok",
                 label: "OK",
-                default: true,
-                callback: (event: any, button: any, dialog: any) => dialog.close({ submitted: true })
+                default: true
             }]
         }, options));
     }
@@ -38,7 +56,7 @@ export class Popup_SETTING_INFO extends foundry.applications.api.DialogV2 {
             fields.className = "form-fields";
             const input = document.createElement("input");
             input.id = config.namespace && config.key;
-            input.name = config.name;
+            input.name = config.key;
             input.value = game.settings.get(moduleId, config.key);
             input.readOnly = config.key === SETTINGS.API_KEY ? false : true;
             input.type = config.key === SETTINGS.API_KEY ? "password" : "text";

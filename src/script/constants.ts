@@ -2,7 +2,7 @@ import { id } from '../module.json';
 
 export const moduleId = id;
 
-export const MODULE_NAMESPACE: string = id;
+export const MODULE_NAMESPACE = id;
 
 const FormInput_API_KEY: foundry.applications.fields.CustomFormInput = (field: foundry.data.fields.DataField, config: foundry.data.types.FormInputConfig) => {
     const group = document.createElement("div");
@@ -135,7 +135,7 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         scope: "world",
         config: false,
         type: new foundry.data.fields.StringField(),
-        default: CONST.PASSWORD_SAFE_STRING,
+        default: "",
         input: FormInput_API_KEY
     },
 

@@ -1,8 +1,8 @@
 import { moduleId, MODULE_NAMESPACE, SETTINGS, SETTINGS_DATA, SETTINGS_SYSTEM } from './constants';
 import { ModuleLogger } from "./utils/logger";
+import { Popup_SETTING_INFO } from "./ui/menu";
 import { FoundryRestApi } from "./types";
 import { initializeWebSocket } from "./network/webSocketEndpoints";
-import { Popup_SETTING_INFO } from "./ui/menu";
 
 
 foundry.helpers.Hooks.once('init', () => {
