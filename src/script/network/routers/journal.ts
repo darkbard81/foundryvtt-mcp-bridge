@@ -19,12 +19,19 @@ router.addRoute({
     actionType: "journal-list",
     handler: async (data, context) => {
         const socketManager = context?.socketManager;
-        ModuleLogger.info(`Received request for roll data`);
+        ModuleLogger.info(`Received request for journal list`);
 
         const journalInfo: JournalEntrySource[] = [];
         game.journal.contents.forEach((j: JournalEntry) => {
-            journalInfo.push(j.toObject() as JournalEntrySource);
+            journalInfo.push(
+                {
+                    _id: j._source._id,
+                    title: j._source.name,
+                    sort: j._source.sort
+                }
+            );
         });
+        ModuleLogger.info(`Sending journal list: ${journalInfo.length} entries`);
 
         socketManager?.send({
             type: "journal-list-result",
@@ -40,7 +47,7 @@ router.addRoute({
         const socketManager = context?.socketManager;
         const payload = (data ?? {}) as { journalId?: string; requestId?: string };
         const { journalId } = payload;
-        ModuleLogger.info(`Received request for journal page list`);
+        ModuleLogger.info(`Received request for journal page list (journalId: ${journalId ?? "unknown"})`);
 
         let journal: JournalEntry | null = null;
         let result:
@@ -70,6 +77,7 @@ router.addRoute({
                     }))
                     : [];
             result = { success: true, pages };
+            ModuleLogger.info(`Journal page list ready (journalId: ${journalId ?? "unknown"}, count: ${pages.length})`);
 
         } catch (err: unknown) {
             const message = err instanceof Error ? err.message : String(err);
@@ -103,6 +111,7 @@ router.addRoute({
             | { success: false; error: string } = { success: false, error: "Unknown error" };
 
         try {
+            ModuleLogger.info(`Journal page action request (action: ${action ?? "unknown"}, journalId: ${journalId ?? "unknown"}, pageId: ${pageId ?? "none"})`);
             journal = typeof journalId === "string" ? game.journal.get(journalId) : null;
             if (!journal) {
                 throw new Error("Journal not found");
@@ -112,24 +121,28 @@ router.addRoute({
                 case "create": {
                     const created = await journal.createEmbeddedDocuments("JournalEntryPage", [pageData ?? {}]);
                     result = { success: true, page: created[0]?.toObject() as JournalEntryPageSource };
+                    ModuleLogger.info(`Journal page created (journalId: ${journalId} new page)`);
                     break;
                 }
                 case "update": {
                     if (!pageId) throw new Error("pageId is required");
                     const updated = await journal.updateEmbeddedDocuments("JournalEntryPage", [{ _id: pageId, ...(pageData ?? {}) }]);
                     result = { success: true, page: updated[0]?.toObject() as JournalEntryPageSource };
+                    ModuleLogger.info(`Journal page updated (journalId: ${journalId}, pageId: ${pageId})`);
                     break;
                 }
                 case "delete": {
                     if (!pageId) throw new Error("pageId is required");
                     await journal.deleteEmbeddedDocuments("JournalEntryPage", [pageId]);
                     result = { success: true, page: { _id: pageId, deleted: true } };
+                    ModuleLogger.info(`Journal page deleted (journalId: ${journalId}, pageId: ${pageId})`);
                     break;
                 }
                 case "read": {
                     const page = pageId ? journal.getEmbeddedDocument("JournalEntryPage", pageId) : null;
                     if (!page) throw new Error("page not found");
                     result = { success: true, page: page.toObject() as JournalEntryPageSource };
+                    ModuleLogger.info(`Journal page read (journalId: ${journalId}, pageId: ${pageId})`);
                     break;
                 }
                 default:
@@ -137,7 +150,7 @@ router.addRoute({
             }
         } catch (err: unknown) {
             const message = err instanceof Error ? err.message : String(err);
-            ModuleLogger.error(`Journal page action failed: ${message}`);
+            ModuleLogger.error(`Journal page action failed (action: ${action ?? "unknown"}, journalId: ${journalId ?? "unknown"}, pageId: ${pageId ?? "none"}): ${message}`);
             result = { success: false, error: message };
         }
 
