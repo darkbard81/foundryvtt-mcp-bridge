@@ -91,3 +91,28 @@ foundry.helpers.Hooks.once("ready", () => {
         }
     }, 1000);
 });
+
+foundry.helpers.Hooks.once("renderChatMessageHTML", (
+    message: foundry.documents.ChatMessage,
+    html: HTMLElement,
+    context: object) => {
+    if (message._source.sound) {
+        ModuleLogger.info(html.innerHTML);
+        const group = document.createElement("div");
+        const button = document.createElement("button");
+        button.addEventListener("click", async (event) => {
+            event.preventDefault(); // 클릭/포커스/submit 연쇄를 막고
+            event.stopPropagation();
+            try {
+                foundry.audio.AudioHelper.play({ src: message._source.sound ?? '', volume: 0.8, loop: false });
+            } catch (err) {
+                ModuleLogger.warn("ChatSound play failed", err);
+            }
+        });
+        const i = document.createElement("i");
+        i.className = 'volume-icon fa-fw fa-solid fa-volume-low'
+        button.appendChild(i);
+        group.append(button);
+        html.append(group);
+    }
+});

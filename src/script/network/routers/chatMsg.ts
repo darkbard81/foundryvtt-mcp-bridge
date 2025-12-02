@@ -79,10 +79,10 @@ router.addRoute(
     {
         actionType: "chat-message",
         handler: (data) => {
-            if (data.audioPath) {
-                const audioPath = data.audioPath;
-                foundry.audio.AudioHelper.play({ src: audioPath, volume: 0.8, loop: false });
-            }
+            // if (data.audioPath) {
+            //     const audioPath = data.audioPath;
+            //     foundry.audio.AudioHelper.play({ src: audioPath, volume: 0.8, loop: false });
+            // }
             //const audience = [...everyoneUserIds()];
             const tokenDoc = canvas.getLayerByEmbeddedName("Token")?.get(data.tokenId)?.document;
             const speakerToken = foundry.documents.ChatMessage.getSpeaker(tokenDoc) ?? foundry.documents.ChatMessage.getSpeaker();
@@ -90,6 +90,7 @@ router.addRoute(
                 speaker: speakerToken,
                 //whisper: audience,
                 content: data.message,
+                sound: data.audioPath
             });
             ModuleLogger.info(`Received chat-message`);
         }
