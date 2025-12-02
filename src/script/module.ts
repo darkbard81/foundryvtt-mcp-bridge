@@ -92,7 +92,7 @@ foundry.helpers.Hooks.once("ready", () => {
     }, 1000);
 });
 
-foundry.helpers.Hooks.once("renderChatMessageHTML", (
+foundry.helpers.Hooks.on("renderChatMessageHTML", (
     message: foundry.documents.ChatMessage,
     html: HTMLElement,
     context: object) => {
