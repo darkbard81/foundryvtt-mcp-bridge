@@ -45,8 +45,7 @@ foundry.helpers.Hooks.once('init', () => {
                 return null;
             }
         }
-    };
-
+    }
 });
 
 foundry.helpers.Hooks.once("ready", () => {
@@ -96,7 +95,7 @@ foundry.helpers.Hooks.on("renderChatMessageHTML", (
     message: foundry.documents.ChatMessage,
     html: HTMLElement,
     context: object) => {
-    if (message._source.sound) {
+    if (message._source.sound && !message.isRoll) {
         ModuleLogger.info(html.innerHTML);
         const group = document.createElement("div");
         const button = document.createElement("button");
@@ -110,7 +109,7 @@ foundry.helpers.Hooks.on("renderChatMessageHTML", (
             }
         });
         const i = document.createElement("i");
-        i.className = 'volume-icon fa-fw fa-solid fa-volume-low'
+        i.className = 'volume-icon fa-fw fa-solid fa-volume-high'
         button.appendChild(i);
         group.append(button);
         html.append(group);
