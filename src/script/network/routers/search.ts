@@ -28,6 +28,26 @@ router.addRoute({
                 return { id, name: user?._source.name };
             });
 
+            type ActorSystemDetails = {
+                system?: {
+                    details?: {
+                        biography?: {
+                            campaignNotes?: string;
+                        };
+                    };
+                };
+            };
+            type SystemDetails = { details?: { publicNotes?: string } };
+            let publicNotes: string | undefined = '';
+
+            if (tokenDoc._source.actorLink) {
+                const actorSystem = actor as ActorSystemDetails;
+                publicNotes = actorSystem.system?.details?.biography?.campaignNotes;
+            } else {
+                const deltaSystem = tokenDoc._source.delta?.system as SystemDetails | undefined;
+                publicNotes = deltaSystem?.details?.publicNotes;
+            }
+
             tokenInfo.push({
                 token: tokenDoc._source._id,
                 name: tokenDoc._source.name,
@@ -35,6 +55,7 @@ router.addRoute({
                 x: tokenDoc._source.x,
                 y: tokenDoc._source.y,
                 type: actor._source.type,
+                publicNotes,
                 owners
             });
         });

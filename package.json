@@ -1,6 +1,6 @@
 {
   "name": "foundryvtt-mcp-bridge",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A Foundry VTT module that provides a general purpose MCP Server through a WebSocket relay",
   "author": "darkbard81",
   "license": "MIT",
