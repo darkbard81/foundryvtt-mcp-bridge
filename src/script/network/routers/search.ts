@@ -1,5 +1,6 @@
 import { Router } from "./baseRouter";
 import { ModuleLogger } from "../../utils/logger";
+import { encryptUuid, targetIdType } from "../../utils/convUUID";
 
 export const router = new Router("searchRouter");
 
@@ -48,10 +49,13 @@ router.addRoute({
                 publicNotes = deltaSystem?.details?.publicNotes;
             }
 
+            let tokenID: string = encryptUuid(tokenDoc._source._id ?? "", targetIdType.TOKEN);
+            let actorID: string = encryptUuid(actor.id ?? "", targetIdType.ACTOR);
+
             tokenInfo.push({
-                token: tokenDoc._source._id,
+                token: tokenID,//tokenDoc._source._id,
                 name: tokenDoc._source.name,
-                actorId: actor.id,
+                actorId: actorID,//actor.id
                 x: tokenDoc._source.x,
                 y: tokenDoc._source.y,
                 type: actor._source.type,

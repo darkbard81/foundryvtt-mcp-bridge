@@ -1,0 +1,149 @@
+  /* ---------------------------------------- */
+  /*  Font Declarations                       */
+  /* ---------------------------------------- */
+  @font-face {
+    font-weight: 900;
+    font-family: 'Pretendard';
+    font-display: swap;
+    src: local('Pretendard Black'), url(./woff2/Pretendard-Black.woff2) format('woff2'), url(./woff/Pretendard-Black.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 800;
+    font-display: swap;
+    src: local('Pretendard ExtraBold'), url(./woff2/Pretendard-ExtraBold.woff2) format('woff2'), url(./woff/Pretendard-ExtraBold.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 700;
+    font-display: swap;
+    src: local('Pretendard Bold'), url(./woff2/Pretendard-Bold.woff2) format('woff2'), url(./woff/Pretendard-Bold.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 600;
+    font-display: swap;
+    src: local('Pretendard SemiBold'), url(./woff2/Pretendard-SemiBold.woff2) format('woff2'), url(./woff/Pretendard-SemiBold.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 500;
+    font-display: swap;
+    src: local('Pretendard Medium'), url(./woff2/Pretendard-Medium.woff2) format('woff2'), url(./woff/Pretendard-Medium.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 400;
+    font-display: swap;
+    src: local('Pretendard Regular'), url(./woff2/Pretendard-Regular.woff2) format('woff2'), url(./woff/Pretendard-Regular.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 300;
+    font-display: swap;
+    src: local('Pretendard Light'), url(./woff2/Pretendard-Light.woff2) format('woff2'), url(./woff/Pretendard-Light.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 200;
+    font-display: swap;
+    src: local('Pretendard ExtraLight'), url(./woff2/Pretendard-ExtraLight.woff2) format('woff2'), url(./woff/Pretendard-ExtraLight.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 100;
+    font-display: swap;
+    src: local('Pretendard Thin'), url(./woff2/Pretendard-Thin.woff2) format('woff2'), url(./woff/Pretendard-Thin.woff) format('woff');
+  }
+
+  /* ---------------------------------------- */
+  /*  PF2e Typography                         */
+  /* ---------------------------------------- */
+  :root {
+    /** Font-size variables not defined by Foundry */
+    --font-size-8: 0.5rem;
+    --font-size-9: 0.5625rem;
+    --font-size-10: 0.625rem;
+    --font-size-15: 0.9375rem;
+    --font-size-17: 1.0625rem;
+    --font-size-19: 1.1875rem;
+    --font-size-21: 1.3125rem;
+    --font-size-22: 1.375rem;
+    --font-size-25: 1.5625rem;
+    --font-size-26: 1.625rem;
+    --font-size-27: 1.6875rem;
+    --font-size-30: 1.875rem;
+    --font-size-34: 2.125rem;
+    --font-size-36: 2.25rem;
+    --font-size-42: 2.625rem;
+    /** Font families */
+    --body-serif: Pretendard, Gelasio, Georgia, serif;
+    --sans-serif: Pretendard, Roboto, sans-serif;
+    --sans-serif-condensed: Pretendard, "Roboto Condensed", var(--sans-serif);
+    --sans-serif-monospace: Pretendard, "Roboto Mono", monospace;
+    --serif: Pretendard, Eczar, Georgia, serif;
+    --serif-condensed: Pretendard, "Modesto Condensed", serif;
+    --journal-cursive: Pretendard, "La Belle Aurore", cursive;
+    --journal-serif: Pretendard, "Vollkorn", var(--serif);
+    --fa6: "Font Awesome 6 Pro", sans-serif;
+    --fad6: "Font Awesome 6 Duotone", sans-serif;
+  }
+
+  /* ---------------------------------------- */
+  /*  Foundry Typography                      */
+  /* ---------------------------------------- */
+  body {
+    --font-sans: Pretendard, "Signika", "Palatino Linotype", sans-serif;
+    --font-serif: Pretendard, "Amiri", serif;
+    --font-awesome: "Font Awesome 6 Pro";
+    --font-awesome-duotone: "Font Awesome 6 Duotone";
+    --font-monospace: Pretendard, monospace;
+    --font-blockquote: Pretendard, "Signika", "Palatino Linotype", sans-serif;
+    --font-h1: Pretendard, "Modesto Condensed", serif;
+    --font-h2: Pretendard, "Amiri", serif;
+    --font-h3: Pretendard, "Signika", "Palatino Linotype", sans-serif;
+    --font-size-10: 0.625rem;
+    --font-size-11: 0.6875rem;
+    --font-size-12: 0.75rem;
+    --font-size-13: 0.8125rem;
+    --font-size-14: 0.875rem;
+    --font-size-15: 0.9375rem;
+    --font-size-16: 1rem;
+    --font-size-18: 1.125rem;
+    --font-size-20: 1.25rem;
+    --font-size-24: 1.5rem;
+    /*     --font-size-28: 1.75rem; */
+    --font-size-28: 1.5rem;
+    --font-size-32: 2rem;
+    --font-size-36: 2.25rem;
+    --font-size-40: 2.5rem;
+    --font-size-48: 3rem;
+    --font-size-64: 4rem;
+    --font-size-80: 5rem;
+  }
+
+  /* ---------------------------------------- */
+  /*  PF2e Override Style Class               */
+  /* ---------------------------------------- */
+  .actor.npc.sheet form>.npc-body>header .name .level-label {
+    /*   flex: 0; */
+    flex: initial;
+    text-align: right;
+    margin-right: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .actor.npc.sheet form .labeled-field a,
+  .actor.npc.sheet form .labeled-field label {
+    /*   flex: 0; */
+    flex: none;
+    font-weight: 600;
+  }

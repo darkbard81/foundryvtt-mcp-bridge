@@ -1,4 +1,5 @@
 import { Router } from "./baseRouter";
+import { decryptUuid, targetIdType } from "../../utils/convUUID";
 import { ModuleLogger } from "../../utils/logger";
 
 export const router = new Router(
@@ -84,7 +85,10 @@ router.addRoute(
             //     foundry.audio.AudioHelper.play({ src: audioPath, volume: 0.8, loop: false });
             // }
             //const audience = [...everyoneUserIds()];
-            const tokenDoc = canvas.getLayerByEmbeddedName("Token")?.get(data.tokenId)?.document;
+            const tokenId = typeof data.tokenId === "string"
+                ? decryptUuid(data.tokenId, targetIdType.TOKEN)
+                : "";
+            const tokenDoc = canvas.getLayerByEmbeddedName("Token")?.get(tokenId)?.document;
             const speakerToken = foundry.documents.ChatMessage.getSpeaker(tokenDoc) ?? foundry.documents.ChatMessage.getSpeaker();
             foundry.documents.ChatMessage.create({
                 speaker: speakerToken,
@@ -123,7 +127,12 @@ router.addRoute(
                     await wait(delay);
                 }
 
-                const tokenDoc = canvas.getLayerByEmbeddedName("Token")?.get(entry.tokenId)?.document;
+                if (typeof entry?.tokenId !== "string") {
+                    ModuleLogger.warn("tokenId is missing for chat-bubbles entry.");
+                    return;
+                }
+                const tokenId = decryptUuid(entry.tokenId, targetIdType.TOKEN);
+                const tokenDoc = canvas.getLayerByEmbeddedName("Token")?.get(tokenId)?.document;
                 if (tokenDoc instanceof foundry.documents.TokenDocument) {
                     bubbles.broadcast(tokenDoc, entry?.message);
                 } else {

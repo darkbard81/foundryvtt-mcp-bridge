@@ -1,4 +1,5 @@
 import { Router } from "./baseRouter";
+import { decryptUuid, encryptUuid, targetIdType } from "../../utils/convUUID";
 import { ModuleLogger } from "../../utils/logger";
 
 export const router = new Router("journalRouter");
@@ -25,7 +26,7 @@ router.addRoute({
         game.journal.contents.forEach((j: JournalEntry) => {
             journalInfo.push(
                 {
-                    _id: j._source._id,
+                    _id: encryptUuid(j._source._id ?? "", targetIdType.JOURNAL),
                     title: j._source.name,
                     sort: j._source.sort
                 }
@@ -55,7 +56,13 @@ router.addRoute({
             | { success: false; error: string; pages?: { id: string; name: string }[] } = { success: false, error: "Unknown error" };
 
         try {
-            journal = typeof journalId === "string" ? game.journal.get(journalId) : null;
+            const rawJournalId = typeof journalId === "string"
+                ? decryptUuid(journalId, targetIdType.JOURNAL)
+                : "";
+            if (!rawJournalId) {
+                throw new Error("journalId is required");
+            }
+            journal = game.journal.get(rawJournalId);
             if (!journal) {
                 throw new Error("Journal not found");
             }
@@ -65,14 +72,15 @@ router.addRoute({
             const pages = collection
                 ? collection.map((page) => {
                     const safePage = page as JournalPageDoc;
+                    const pageId = safePage.id ?? safePage._id ?? safePage._source?._id ?? "";
                     return {
-                        id: safePage.id ?? safePage._id ?? safePage._source?._id ?? "",
+                        id: encryptUuid(pageId, targetIdType.PAGE),
                         name: safePage.name ?? safePage.title ?? safePage._source?.title ?? ""
                     };
                 })
                 : Array.isArray((journal as JournalWithSource)._source?.pages)
                     ? ((journal as JournalWithSource)._source?.pages ?? []).map((page) => ({
-                        id: page._id,
+                        id: encryptUuid(page._id ?? "", targetIdType.PAGE),
                         name: page.title
                     }))
                     : [];
@@ -112,7 +120,13 @@ router.addRoute({
 
         try {
             ModuleLogger.info(`Journal page action request (action: ${action ?? "unknown"}, journalId: ${journalId ?? "unknown"}, pageId: ${pageId ?? "none"})`);
-            journal = typeof journalId === "string" ? game.journal.get(journalId) : null;
+            const rawJournalId = typeof journalId === "string"
+                ? decryptUuid(journalId, targetIdType.JOURNAL)
+                : "";
+            if (!rawJournalId) {
+                throw new Error("journalId is required");
+            }
+            journal = game.journal.get(rawJournalId);
             if (!journal) {
                 throw new Error("Journal not found");
             }
@@ -120,28 +134,51 @@ router.addRoute({
             switch (action) {
                 case "create": {
                     const created = await journal.createEmbeddedDocuments("JournalEntryPage", [pageData ?? {}]);
-                    result = { success: true, page: created[0]?.toObject() as JournalEntryPageSource };
+                    const createdPage = created[0]?.toObject() as JournalEntryPageSource | undefined;
+                    result = {
+                        success: true,
+                        page: createdPage && createdPage._id
+                            ? { ...createdPage, _id: encryptUuid(createdPage._id, targetIdType.PAGE) }
+                            : (createdPage as JournalEntryPageSource)
+                    };
                     ModuleLogger.info(`Journal page created (journalId: ${journalId} new page)`);
                     break;
                 }
                 case "update": {
                     if (!pageId) throw new Error("pageId is required");
-                    const updated = await journal.updateEmbeddedDocuments("JournalEntryPage", [{ _id: pageId, ...(pageData ?? {}) }]);
-                    result = { success: true, page: updated[0]?.toObject() as JournalEntryPageSource };
+                    const rawPageId = decryptUuid(pageId, targetIdType.PAGE);
+                    if (!rawPageId) throw new Error("pageId is required");
+                    const updated = await journal.updateEmbeddedDocuments("JournalEntryPage", [{ _id: rawPageId, ...(pageData ?? {}) }]);
+                    const updatedPage = updated[0]?.toObject() as JournalEntryPageSource | undefined;
+                    result = {
+                        success: true,
+                        page: updatedPage && updatedPage._id
+                            ? { ...updatedPage, _id: encryptUuid(updatedPage._id, targetIdType.PAGE) }
+                            : (updatedPage as JournalEntryPageSource)
+                    };
                     ModuleLogger.info(`Journal page updated (journalId: ${journalId}, pageId: ${pageId})`);
                     break;
                 }
                 case "delete": {
                     if (!pageId) throw new Error("pageId is required");
-                    await journal.deleteEmbeddedDocuments("JournalEntryPage", [pageId]);
+                    const rawPageId = decryptUuid(pageId, targetIdType.PAGE);
+                    if (!rawPageId) throw new Error("pageId is required");
+                    await journal.deleteEmbeddedDocuments("JournalEntryPage", [rawPageId]);
                     result = { success: true, page: { _id: pageId, deleted: true } };
                     ModuleLogger.info(`Journal page deleted (journalId: ${journalId}, pageId: ${pageId})`);
                     break;
                 }
                 case "read": {
-                    const page = pageId ? journal.getEmbeddedDocument("JournalEntryPage", pageId) : null;
+                    const rawPageId = pageId ? decryptUuid(pageId, targetIdType.PAGE) : "";
+                    const page = rawPageId ? journal.getEmbeddedDocument("JournalEntryPage", rawPageId) : null;
                     if (!page) throw new Error("page not found");
-                    result = { success: true, page: page.toObject() as JournalEntryPageSource };
+                    const pageObject = page.toObject() as JournalEntryPageSource;
+                    result = {
+                        success: true,
+                        page: pageObject._id
+                            ? { ...pageObject, _id: encryptUuid(pageObject._id, targetIdType.PAGE) }
+                            : pageObject
+                    };
                     ModuleLogger.info(`Journal page read (journalId: ${journalId}, pageId: ${pageId})`);
                     break;
                 }
