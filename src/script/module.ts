@@ -1,8 +1,9 @@
-import { moduleId, MODULE_NAMESPACE, SETTINGS, SETTINGS_DATA, SETTINGS_SYSTEM } from './constants';
+import { moduleId, MODULE_NAMESPACE, SETTINGS, SETTINGS_DATA, SETTINGS_SYSTEM, SETTINGS_AI } from './constants';
 import { ModuleLogger } from "./utils/logger";
-import { Popup_SETTING_INFO } from "./ui/menu";
+import { Popup_SETTING_INFO, Popup_SETTING_AI } from "./ui/menu";
 import { FoundryRestApi } from "./types";
 import { initializeWebSocket } from "./network/webSocketEndpoints";
+import Game from '@client/game.mjs';
 
 
 foundry.helpers.Hooks.once('init', () => {
@@ -18,12 +19,26 @@ foundry.helpers.Hooks.once('init', () => {
         game.settings.register(MODULE_NAMESPACE, config.key, config);
     }
 
+    for (const config of Object.values(SETTINGS_AI)) {
+        // config: foundry.types.SettingConfig
+        game.settings.register(MODULE_NAMESPACE, config.key, config);
+    }
+
     game.settings.registerMenu(MODULE_NAMESPACE, "clientInformation", {
         name: "Client Information",
         label: "Client Information",      // The text label used in the button
         hint: "Configure client information in this submenu.",
         icon: "fa-solid fa-bars",               // A Font Awesome icon used in the submenu button
         type: Popup_SETTING_INFO as typeof foundry.applications.api.ApplicationV2,   // DialogV2 extends ApplicationV2 but has a narrower ctor type; cast for registerMenu typing
+        restricted: true                   // Restrict this submenu to gamemaster only?
+    });
+
+    game.settings.registerMenu(MODULE_NAMESPACE, "llmInformation", {
+        name: "AI-NPC Information",
+        label: "AI-NPC Information",      // The text label used in the button
+        hint: "Configure AI-NPC information in this submenu.",
+        icon: "fa-solid fa-bars",               // A Font Awesome icon used in the submenu button
+        type: Popup_SETTING_AI as typeof foundry.applications.api.ApplicationV2,   // DialogV2 extends ApplicationV2 but has a narrower ctor type; cast for registerMenu typing
         restricted: true                   // Restrict this submenu to gamemaster only?
     });
 
@@ -113,5 +128,17 @@ foundry.helpers.Hooks.on("renderChatMessageHTML", (
         button.appendChild(i);
         group.append(button);
         html.append(group);
+    }
+});
+
+/** Foundery Type Ref. */
+type RenderChatInputContext = { previousParent: HTMLElement };
+
+foundry.helpers.Hooks.on("renderChatInput", (
+    app: foundry.applications.sidebar.tabs.ChatLog,
+    elements: Record<string, HTMLElement>,
+    context: RenderChatInputContext) => {
+
+    if (game.users.current?.isGM && game.users.current?.hasRole(CONST.USER_ROLES.GAMEMASTER)) {
     }
 });

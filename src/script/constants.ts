@@ -43,12 +43,15 @@ export const SETTINGS = {
     FOUNDRY_VERSION: 'foundryVersion',
     SYSTEM_ID: 'systemId',
     SYSTEM_TITLE: 'systemTitle',
-    SYSTEM_VERSION: 'systemVersion'
+    SYSTEM_VERSION: 'systemVersion',
+    //AI NPC Setting
+    AI_ACTIVE: "Active AI",
+    AI_API_KEY: "API Key for AI"
 };
 
 const promptReload = (_value?: unknown) => {
-  console.log(_value);
-  foundry.applications.settings.SettingsConfig.reloadConfirm();
+    console.log(_value);
+    foundry.applications.settings.SettingsConfig.reloadConfirm();
 };
 
 export const SETTINGS_DATA: Record<string, foundry.types.SettingConfig> = {
@@ -220,5 +223,33 @@ export const SETTINGS_SYSTEM: Record<string, foundry.types.SettingConfig> = {
         config: false,
         type: new foundry.data.fields.StringField(),
         default: game.system?._source?.version ?? ""
+    }
+}
+
+export const SETTINGS_AI: Record<string, foundry.types.SettingConfig> = {
+
+    [SETTINGS.AI_ACTIVE]: {
+        key: SETTINGS.AI_ACTIVE,
+        namespace: MODULE_NAMESPACE,
+        name: "Active NPC Response by LLM",
+        hint: "Enable LLM-driven NPC responses. When active, NPCs will generate dynamic reactions using the language model.",
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.BooleanField(),
+        default: false,
+        onChange: promptReload
+    },
+
+    [SETTINGS.AI_API_KEY]: {
+        key: SETTINGS.AI_API_KEY,
+        namespace: MODULE_NAMESPACE,
+        name: "API Key",
+        hint: "API Key for LLM",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField(),
+        default: "",
+        input: FormInput_API_KEY,
+        onChange: promptReload
     }
 }
